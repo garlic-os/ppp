@@ -27,3 +27,5 @@ clean:
 configure:
 	cd ./libpurple-mini
 	./update-version
+	# Keep git from saying you modified the submodule
+	git config submodule.libpurple-mini.ignore all
