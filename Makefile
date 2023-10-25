@@ -1,10 +1,17 @@
-SOURCES = ppp.c
-TARGET = ppp
+.ONESHELL:
+.SHELLFLAGS += -e
+
+SOURCES = libpesterchum.c
+TARGET = libpesterchum
+
+CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -pedantic -std=c99 -O3 -fvisibility=hidden
+CFLAGS += -DGLIB_DISABLE_DEPRECATION_WARNINGS  # it's pidgin's fault
+
 INCLUDES = -I/usr/include/glib-2.0
 
-.PHONY: clean
+.PHONY: clean configure
 
 all: linux windows
 
@@ -16,3 +23,7 @@ windows: $(SOURCES)
 
 clean:
 	rm -f $(TARGET).so $(TARGET).dll $(TARGET).dll.a
+
+configure:
+	cd ./libpurple-mini
+	./update-version
