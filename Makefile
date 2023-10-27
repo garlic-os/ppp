@@ -53,13 +53,13 @@ purple:
 	cd ./lib/libpurple-mini
 	make CFLAGS+=-DGLIB_DISABLE_DEPRECATION_WARNINGS
 	cd ../..
-purple: PURPLE_OBJECTS := $(shell find lib/libpurple-mini -name '*.o')
+	$(eval PURPLE_OBJECTS := $(shell find lib/libpurple-mini -name '*.o'))
 
 munit:
 	cd ./lib/munit
 	make munit.c CC=$(CC) ASAN=$(ASAN)
 	cd ../..
-munit: MUNIT_OBJECTS := $(shell find lib/munit -name '*.o')
+	$(eval MUNIT_OBJECTS := $(shell find lib/munit -name '*.o'))
 
 
 .PHONY: clean
