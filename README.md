@@ -7,13 +7,15 @@ A libpurple/Pidgin plugin for rendering Pesterchum messages
 - [make](https://command-not-found.com/make)
 
 ## Compiling
-Do this one time:
 ```bash
-$ make configure
+$ ./configure.sh
+$ make  # outputs ./libpesterchum.so
 ```
-Then:
+
+## Testing
 ```bash
-$ make
+$ make testrunner
+./testrunner
 ```
 
 ## Credits
