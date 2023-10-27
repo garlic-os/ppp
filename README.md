@@ -2,8 +2,8 @@
 A libpurple/Pidgin plugin for rendering Pesterchum messages
 
 ## Requirements
-- glib v2.76 or higher
-- [libpurple-mini](https://github.com/felipec/libpurple-mini)
+- glib v2.76+
+- nss
 - [make](https://command-not-found.com/make)
 
 ## Compiling
