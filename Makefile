@@ -57,7 +57,7 @@ purple: PURPLE_OBJECTS := $(shell find lib/libpurple-mini -name '*.o')
 
 munit:
 	cd ./lib/munit
-	make
+	make munit.c
 	cd ../..
 munit: MUNIT_OBJECTS := $(shell find lib/munit -name '*.o')
 
