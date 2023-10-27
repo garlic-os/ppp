@@ -103,12 +103,14 @@ extern void colorize_message(char **message) {
 }
 
 
-static gboolean plugin_load(/* PurplePlugin *plugin */) {
+static gboolean plugin_load(PurplePlugin *plugin) {
+	(void) plugin;
 	return TRUE;
 }
 
 
-static gboolean plugin_unload(/* PurplePlugin *plugin */) {
+static gboolean plugin_unload(PurplePlugin *plugin) {
+	(void) plugin;
 	return TRUE;
 }
 
@@ -153,8 +155,8 @@ static PurplePluginInfo info = {
 };
 
 
-// Initialize default preferences
-static void init_plugin(/* PurplePlugin *plugin */) {
+static void init_plugin(PurplePlugin *plugin) {
+	(void) plugin;
 	#ifdef ENABLE_NLS
 		bindtextdomain(GETTEXT_PACKAGE, PP_LOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
