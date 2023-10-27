@@ -7,7 +7,7 @@
 
 
 MunitResult do_test(const MunitParameter params[], void *fixture) {
-	(void)(fixture);
+	(void) fixture;
 	char *input = (char*) munit_parameters_get(params, "input");
 	const char *expected_output = munit_parameters_get(params, "expected_output");
 	colorize_message(&input);
@@ -39,9 +39,9 @@ int main() {
 		{ NULL, NULL },
 	};
 
-	static const MunitTest tests[] = {
+	static MunitTest tests[] = {
 		{
-			.name       = "/rgb",
+			.name       = (char*) "/rgb",
 			.test       = do_test,
 			.setup      = NULL,
 			.tear_down  = NULL,
@@ -53,7 +53,7 @@ int main() {
 	};
 
 	static const MunitSuite suite = {
-		.prefix     = "/libpesterchum",
+		.prefix     = (char*) "/libpesterchum",
 		.tests      = tests,
 		.suites     = NULL,
 		.iterations = 1,
