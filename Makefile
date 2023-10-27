@@ -14,8 +14,8 @@ TARGET_OBJECTS :=  $(TARGET_SOURCES:%.c=%.o)
 TEST_OBJECTS := $(TEST_SOURCES:%.c=%.o)
 
 CFLAGS := -Wall -Wextra -Werror -pedantic -std=c99 \
-          -DGLIB_DISABLE_DEPRECATION_WARNINGS \
-          -fPIC -shared -fvisibility=hidden
+          -DGLIB_DISABLE_DEPRECATION_WARNINGS
+SHARED_CFLAGS := -fPIC -shared -fvisibility=hidden
 ifdef DEBUG
 	CFLAGS += -g -O0
 else
@@ -32,12 +32,12 @@ LDFLAGS := $(shell pkg-config --libs $(PACKAGES))
 
 # Link target
 $(TARGET): $(TARGET_OBJECTS) $(PURPLE_OBJECTS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(TARGET_OBJECTS) $(PURPLE_OBJECTS) -o $@
+	$(CC) $(CFLAGS) $(SHARED_CFLAGS) $(LDFLAGS) $(INCLUDES) $(TARGET_OBJECTS) $(PURPLE_OBJECTS) -o $@
 
 # Compile target
 $(TARGET_OBJECTS): purple
 $(TARGET_OBJECTS): $(TARGET_SOURCES)
-	$(CC) $(CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
+	$(CC) $(CFLAGS) $(SHARED_CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
 
 
 testrunner: $(TEST_OBJECTS) $(TARGET_OBJECTS) $(PURPLE_OBJECTS) $(MUNIT_OBJECTS)
