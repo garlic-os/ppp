@@ -3,3 +3,4 @@
 	url = https://github.com/felipec/libpurple-mini.git
 [submodule "lib/munit"]
 	path = lib/munit
+	url = https://github.com/nemequ/munit.git
