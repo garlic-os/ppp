@@ -17,10 +17,10 @@ CFLAGS := -Wall -Wextra -Werror -pedantic -std=c99 \
           -DGLIB_DISABLE_DEPRECATION_WARNINGS
 SHARED_CFLAGS := -fPIC -shared -fvisibility=hidden
 ifdef DEBUG
-	CFLAGS += -g -O0
+	CFLAGS += -ggdb3 -O0
 else
 	ifdef ASAN
-		CFLAGS += -g -O0 -fsanitize=address
+		CFLAGS += -ggdb3 -O0 -fsanitize=address
 	else
 		CFLAGS += -O3
 	endif
