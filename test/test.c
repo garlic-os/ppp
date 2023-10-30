@@ -20,11 +20,19 @@ MunitResult do_test(const MunitParameter params[], void *fixture) {
 
 
 int main() {
-	#define ARG_SETS_COUNT 1
+	#define ARG_SETS_COUNT 3
 	static ArgSet arg_sets[ARG_SETS_COUNT + 1] = {
 		{
-			(char*) "<c=0,255,0>hi</c>",
-			(char*) "<FONT COLOR=\"#00ff00\">hi</FONT>"
+			(char*) "<c=#ff00ff>hi</c>",
+			(char*) "<FONT COLOR=\"#ff00ff\">hi</FONT>"
+		},
+		{
+			(char*) "guh<c=#ff00ff>hi</c>",
+			(char*) "guh<FONT COLOR=\"#ff00ff\">hi</FONT>"
+		},
+		{
+			(char*) "<c=#ff00ff>computer</c>",
+			(char*) "<FONT COLOR=\"#ff00ff\">computer</FONT>"
 		}
 	};
 
