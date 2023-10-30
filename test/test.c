@@ -1,5 +1,5 @@
 #include "../lib/munit/munit.h"
-#include "../src/libpesterchum.h"
+#include "../src/pesterchum.h"
 
 #include <stdio.h>
 
