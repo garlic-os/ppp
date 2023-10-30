@@ -3,6 +3,11 @@
 
 #include <stdio.h>
 
+typedef struct {
+	char *input;
+	char *expected_output;
+} ArgSet;
+
 
 MunitResult do_test(const MunitParameter params[], void *fixture) {
 	(void) fixture;
@@ -16,20 +21,22 @@ MunitResult do_test(const MunitParameter params[], void *fixture) {
 
 
 int main() {
-	// do_test(
-	// 	"<c=0,255,0>hi</c>",
-	// 	"<FONT COLOR=\"#00ff00\">hi</FONT>"
-	// );
-
-	static char* input_params[] = {
-		"<c=0,255,0>hi</c>",
-		NULL
+	#define ARG_SETS_COUNT 1
+	static ArgSet arg_sets[ARG_SETS_COUNT + 1] = {
+		{
+			(char*) "<c=0,255,0>hi</c>",
+			(char*) "<FONT COLOR=\"#00ff00\">hi</FONT>"
+		}
 	};
 
-	static char* expected_output_params[] = {
-		"<FONT COLOR=\"#00ff00\">hi</FONT>",
-		NULL
-	};
+	static char* input_params[ARG_SETS_COUNT + 1];
+	static char* expected_output_params[ARG_SETS_COUNT + 1];
+	for (int i = 0; i < ARG_SETS_COUNT; i++) {
+		input_params[i] = arg_sets[i].input;
+		expected_output_params[i] = arg_sets[i].expected_output;
+	}
+	input_params[ARG_SETS_COUNT] = NULL;
+	expected_output_params[ARG_SETS_COUNT] = NULL;
 
 	static MunitParameterEnum test_params[] = {
 		{ "input", input_params },
@@ -39,7 +46,7 @@ int main() {
 
 	static MunitTest tests[] = {
 		{
-			.name       = (char*) "/rgb",
+			.name       = (char*) "/tests",
 			.test       = do_test,
 			.setup      = NULL,
 			.tear_down  = NULL,
