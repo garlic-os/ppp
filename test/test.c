@@ -1,5 +1,3 @@
-#define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_76)
-#include <glib.h>
 #include "../lib/munit/munit.h"
 #include "../src/libpesterchum.h"
 
