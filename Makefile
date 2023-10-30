@@ -47,7 +47,7 @@ $(TARGET_OBJECTS): $(TARGET_SOURCES)
 
 testrunner: $(TEST_OBJECTS) $(MUNIT) $(TARGET)
 	$(CC) $(CFLAGS) $(TEST_OBJECTS) $(MUNIT) -o $@ \
-	-L. -lpesterchum
+	-L. -lpesterchum -Wl,-rpath=$(shell pwd)
 
 $(TEST_OBJECTS): $(TEST_SOURCES)
 	$(CC) $(CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
