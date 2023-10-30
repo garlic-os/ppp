@@ -2,20 +2,24 @@
 .SHELLFLAGS += -e
 
 TARGET := libpesterchum.so
+
 CC := gcc
 PACKAGES := glib-2.0
 
+# Submodules
+PURPLE_DIR := ./lib/libpurple-mini
+PURPLE := $(PURPLE_DIR)/libpurple.so
+MUNIT_DIR := ./lib/munit
+MUNIT := $(MUNIT_DIR)/munit.o
+
 TARGET_SOURCES := $(shell find src/ -name '*.c')
 TEST_SOURCES := $(shell find test/ -name '*.c')
-PURPLE_SOURCES := $(shell find lib/libpurple-mini -name '*.c')
-MUNIT_SOURCES := $(shell find lib/munit -name '*.c')
 
-TARGET_OBJECTS :=  $(TARGET_SOURCES:%.c=%.o)
+TARGET_OBJECTS := $(TARGET_SOURCES:%.c=%.o)
 TEST_OBJECTS := $(TEST_SOURCES:%.c=%.o)
 
-CFLAGS := -Wall -Wextra -Werror -pedantic -std=c99 \
+CFLAGS := -Wall -Wextra -Werror -pedantic -std=c99 -fPIC \
           -DGLIB_DISABLE_DEPRECATION_WARNINGS
-SHARED_CFLAGS := -fPIC -shared -fvisibility=hidden
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
 else
@@ -27,49 +31,44 @@ else
 endif
 
 INCLUDES := $(shell pkg-config --cflags $(PACKAGES))
-LDFLAGS := $(shell pkg-config --libs $(PACKAGES))
+LDFLAGS := $(shell pkg-config --libs $(PACKAGES)) \
+           -shared -L$(PURPLE_DIR) -lpurple
 
 
 # Link target
-$(TARGET): $(TARGET_OBJECTS) $(PURPLE_OBJECTS)
-	$(CC) $(CFLAGS) $(SHARED_CFLAGS) $(LDFLAGS) $(INCLUDES) $(TARGET_OBJECTS) $(PURPLE_OBJECTS) -o $@
+$(TARGET): $(TARGET_OBJECTS) $(PURPLE)
+	$(CC) $(CFLAGS) $(INCLUDES) $(TARGET_OBJECTS) -o $@ \
+	$(LDFLAGS) -Wl,-rpath=$(shell realpath $(PURPLE_DIR))
 
 # Compile target
-$(TARGET_OBJECTS): purple
 $(TARGET_OBJECTS): $(TARGET_SOURCES)
-	$(CC) $(CFLAGS) $(SHARED_CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
+	$(CC) $(CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
 
 
-testrunner: $(TEST_OBJECTS) $(TARGET_OBJECTS) $(PURPLE_OBJECTS) $(MUNIT_OBJECTS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(TEST_OBJECTS) $(TARGET_OBJECTS) $(PURPLE_OBJECTS) $(MUNIT_OBJECTS) -o $@
+testrunner: $(TEST_OBJECTS) $(MUNIT) $(TARGET)
+	$(CC) $(CFLAGS) $(TEST_OBJECTS) $(MUNIT) -o $@ \
+	-L. -lpesterchum
 
-$(TEST_OBJECTS): munit
 $(TEST_OBJECTS): $(TEST_SOURCES)
 	$(CC) $(CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
 
 
 # Submodules
-purple:
-	cd ./lib/libpurple-mini
-	make CFLAGS+=-DGLIB_DISABLE_DEPRECATION_WARNINGS
+$(PURPLE):
+	cd $(PURPLE_DIR)
+	make libpurple.so CFLAGS+=-DGLIB_DISABLE_DEPRECATION_WARNINGS SSL=n
+	ln -s libpurple.so libpurple.so.0
 	cd ../..
-	$(eval PURPLE_OBJECTS := $(shell find lib/libpurple-mini -name '*.o'))
 
-munit:
-	cd ./lib/munit
-	make munit.c CC=$(CC) ASAN=$(ASAN)
+$(MUNIT):
+	cd $(MUNIT_DIR)
+	make munit.o CC=$(CC) CFLAGS="$(CFLAGS)"
 	cd ../..
-	$(eval MUNIT_OBJECTS := $(shell find lib/munit -name '*.o'))
 
 
 .PHONY: clean
-clean: D_FILES := $(TARGET_SOURCES:%.c=%.d) $(TEST_SOURCES:%.c=%.d)
 clean:
-	rm -f $(TARGET_OBJECTS)
+	rm -f **/*.o **/*.d **/*.so **/*.so.* **/*.a **/*.dll **/*.exe **/*.de
 	rm -f $(TARGET)
-	rm -f $(D_FILES)
-	cd ./lib/libpurple-mini
-	make clean
-	cd ../munit
-	make clean
-	cd ../..
+
+-include $(TARGET_OBJECTS:%.o=%.d)
