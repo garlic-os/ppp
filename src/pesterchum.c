@@ -19,6 +19,8 @@
 #include "../lib/libpurple-mini/internal.h"
 #include "../lib/libpurple-mini/debug.h"
 
+#include "pesterchum.h"
+
 
 #define P_NAME     "Purple Pesterchum"
 #define P_SUMMARY  "Pesterchum plugin for libpurple/Pidgin"
@@ -30,7 +32,7 @@
 
 
 // https://stackoverflow.com/a/4832
-int64_t index_of(const char *haystack, const char *needle, size_t start_index) {
+static int64_t index_of(const char *haystack, const char *needle, size_t start_index) {
 	g_return_val_if_fail(haystack != NULL, -1);
 	g_return_val_if_fail(needle   != NULL, -1);
 	g_return_val_if_fail(start_index < strlen(haystack), -1);
@@ -50,7 +52,7 @@ int64_t index_of(const char *haystack, const char *needle, size_t start_index) {
 //   <c=#7f7f7f>hi</c>
 //   <c=red>hi</c>
 //   ending </c> not required
-extern void colorize_message(char **message) {
+void colorize_message(char **message) {
 	g_return_if_fail(message   != NULL);
 	g_return_if_fail(*message  != NULL);
 	g_return_if_fail(**message != '\0');
@@ -98,7 +100,7 @@ extern void colorize_message(char **message) {
 	}
 
 	// Return result
-	g_free(*message);
+	// g_free(*message);
 	*message = g_string_free(new_msg, FALSE);
 }
 
