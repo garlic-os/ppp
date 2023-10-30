@@ -11,11 +11,10 @@ typedef struct {
 
 MunitResult do_test(const MunitParameter params[], void *fixture) {
 	(void) fixture;
-	char *input = (char*) munit_parameters_get(params, "input");
+	char *actual_output = (char*) munit_parameters_get(params, "input");
 	const char *expected_output = munit_parameters_get(params, "expected_output");
-	colorize_message(&input);
-	printf("actual output: %s\n", input);
-	munit_assert_string_equal(input, expected_output);
+	colorize_message(&actual_output);
+	munit_assert_string_equal(actual_output, expected_output);
 	return MUNIT_OK;
 }
 
