@@ -69,6 +69,6 @@ $(MUNIT):
 .PHONY: clean
 clean:
 	rm -f **/*.o **/*.d **/*.so **/*.so.* **/*.a **/*.dll **/*.exe **/*.de
-	rm -f $(TARGET)
+	rm -f $(TARGET) testrunner
 
 -include $(TARGET_OBJECTS:%.o=%.d)
