@@ -4,7 +4,6 @@
 #define PURPLE_PLUGINS
 
 #include <string.h>
-#include <stdint.h>
 
 #define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_76)
 #include <glib.h>
@@ -32,7 +31,7 @@
 
 
 // https://stackoverflow.com/a/4832
-static int64_t index_of(const char *haystack, const char *needle, size_t start_index) {
+static gssize index_of(const char *haystack, const char *needle, gssize start_index) {
 	g_return_val_if_fail(haystack != NULL, -1);
 	g_return_val_if_fail(needle   != NULL, -1);
 	g_return_val_if_fail(start_index < strlen(haystack), -1);
@@ -62,10 +61,10 @@ void colorize_message(char **message) {
 
 	// Scan the message for Pesterchum color codes and add respective
 	// Pidgin color codes to the new message
-	int64_t index_close = 0;
-	int64_t index_open = 0;
-	int64_t index_start = 0;
-	int64_t index_end = 0;
+	gssize index_close = 0;
+	gssize index_open = 0;
+	gssize index_start = 0;
+	gssize index_end = 0;
 	while (index_open != -1) {
 		index_open = index_of(*message, "<c=", index_close);
 		if (index_open != -1) {
