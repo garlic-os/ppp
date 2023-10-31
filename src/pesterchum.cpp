@@ -16,11 +16,11 @@
 #endif
 #include <libpurple/account.h>  // PurpleAccount
 #include <libpurple/conversation.h>  // PurpleConversation, PurpleMessageFlags, purple_conversations_get_handle
-#include <libpurple/plugin.h>  // PurplePlugin, PurplePluginInfo, PURPLE_INIT_PLUGIN
+#include <libpurple/plugin.h>  // PurplePlugin, PurplePluginInfo, PURPLE_INIT_PLUGIN, PURPLE_PLUGIN_STANDARD, PURPLE_PRIORITY_DEFAULT
 #include <libpurple/signals.h>  // PURPLE_CALLBACK, purple_signal_connect
 #include <libpurple/version.h>  // PURPLE_*_VERSION
 
-#include "pesterchum.h"
+#include "./pesterchum.h"
 
 
 #define P_NAME     (char*) "Purple Pesterchum"
@@ -54,8 +54,8 @@ void convert_message(char **message) {
 
 	GString *new_msg = g_string_sized_new(strlen(*message));
 
-	// Scan the message for Pesterchum color codes and add respective
-	// Pidgin color codes to the new message
+	// Scan the message for Pesterchum color markup and add corresponding
+	// Pidgin color markup to the new message
 	size_t message_size = strlen(*message);
 	char *cursor = *message;
 	while (cursor < *message + message_size) {
