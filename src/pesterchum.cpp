@@ -93,8 +93,34 @@ void convert_message(char **message) {
 }
 
 
+// Convert incoming text by intercepting the received-im signal
+static void received_im_msg(
+	PurpleAccount *account,
+	char *sender,
+	char *message,
+	PurpleConversation *conv,
+	PurpleMessageFlags flags
+) {
+	(void) account;
+	(void) sender;
+	(void) conv;
+	(void) flags;
+	// if (conv == NULL) {
+	// 	conv = purple_conversation_new(PURPLE_CONV_TYPE_IM, account, sender);
+	// }
+	convert_message(&message);
+}
+
+
+// Register the received-im signal
 static gboolean plugin_load(PurplePlugin *plugin) {
-	(void) plugin;
+	purple_signal_connect(
+		purple_conversations_get_handle(),
+		"received-im-msg",
+		plugin,
+		PURPLE_CALLBACK(received_im_msg),
+		NULL
+	);
 	return TRUE;
 }
 
@@ -157,4 +183,4 @@ static void init_plugin(PurplePlugin *plugin) {
 }
 
 
-PURPLE_INIT_PLUGIN(purple_pesterchum, init_plugin, info)
+PURPLE_INIT_PLUGIN(purple_pesterchum, init_plugin, info);
