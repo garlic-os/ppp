@@ -152,10 +152,10 @@ static PurplePluginInfo info = {
 	.dependencies      = NULL,
 	.priority          = PURPLE_PRIORITY_DEFAULT,
 	.id                = P_ID,
-	.name              = NULL,
+	.name              = P_NAME,
 	.version           = P_VERSION,
-	.summary           = NULL,
-	.description       = NULL,
+	.summary           = P_SUMMARY,
+	.description       = P_DESC,
 	.author            = P_AUTHOR,
 	.homepage          = P_WEBSITE,
 	.load              = plugin_load,
@@ -174,13 +174,6 @@ static PurplePluginInfo info = {
 
 static void init_plugin(PurplePlugin *plugin) {
 	(void) plugin;
-	#ifdef ENABLE_NLS
-		bindtextdomain(GETTEXT_PACKAGE, PP_LOCALEDIR);
-		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-	#endif
-	info.name = (char *) _(P_NAME);
-	info.summary = (char *) _(P_SUMMARY);
-	info.description = (char *) _(P_DESC);
 }
 
 
