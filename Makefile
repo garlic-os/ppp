@@ -44,7 +44,7 @@ testrunner: $(TEST_OBJECTS) $(TARGET)
 	$(CC) $(CFLAGS) $(TEST_OBJECTS) -o testrunner \
 	-L. -lpesterchum -Wl,-rpath=$(shell pwd)
 
-$(TEST_OBJECTS): $(TEST_SOURCES)
+*.o: *.cpp
 	$(CC) $(CFLAGS) -MMD -o $@ -c $<
 
 
