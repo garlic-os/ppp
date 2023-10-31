@@ -1,10 +1,12 @@
-
 # Build artifacts
 libpesterchum.so
 testrunner
 
 # IDE configuration files
 .vscode/
+
+# sometimes the make output is too long so i put it here to read it
+make.log
 
 # Prerequisites
 *.d
