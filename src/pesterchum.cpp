@@ -9,15 +9,14 @@
 #define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_76)
 #include <glib.h>
 
+// libpurple headers
 #ifdef _WIN32
-	#include "../libpurple-mini/win32/win32dep.h"
+	#include <libpurple/win32dep.h>
 #endif
-
-#include "../lib/libpurple-mini/version.h"
-#include "../lib/libpurple-mini/plugin.h"
-#include "../lib/libpurple-mini/util.h"
-#include "../lib/libpurple-mini/internal.h"
-#include "../lib/libpurple-mini/debug.h"
+#include <libpurple/version.h>
+#include <libpurple/plugin.h>
+#include <libpurple/util.h>
+#include <libpurple/debug.h>
 
 #include "pesterchum.h"
 

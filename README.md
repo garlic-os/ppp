@@ -2,14 +2,14 @@
 A libpurple/Pidgin plugin for rendering Pesterchum messages
 
 ## Requirements
-- glib v2.76+
-- nss
+- libpurple[^1]
 - [make](https://command-not-found.com/make)
+
+[^1]: `libpurple-dev` in apt
 
 ## Compiling
 ```bash
-$ ./configure.sh
-$ make  # outputs ./libpesterchum.so
+$ make
 ```
 
 ## Testing
@@ -17,6 +17,12 @@ $ make  # outputs ./libpesterchum.so
 $ make testrunner
 ./testrunner
 ```
+
+## Installing
+TO DO
+<!-- ```bash
+$ make install
+``` -->
 
 ## Credits
 - code lifted heavily from [Gaim Colorize Plug-in](https://keep.imfreedom.org/pidgin/purple-plugin-pack/file/tip/colorize/colorize.c) © 2005 Ike Gingerich
