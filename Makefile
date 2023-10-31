@@ -3,23 +3,22 @@
 
 TARGET := libpesterchum.so
 
-CC := gcc
+CC := g++
 PACKAGES := glib-2.0
 
 # Submodules
 PURPLE_DIR := ./lib/libpurple-mini
 PURPLE := $(PURPLE_DIR)/libpurple.so
-MUNIT_DIR := ./lib/munit
-MUNIT := $(MUNIT_DIR)/munit.o
 
-TARGET_SOURCES := $(shell find src/ -name '*.c')
-TEST_SOURCES := $(shell find test/ -name '*.c')
+TARGET_SOURCES := $(shell find src/ -name '*.cpp')
+TEST_SOURCES := $(shell find test/ -name '*.cpp')
 
-TARGET_OBJECTS := $(TARGET_SOURCES:%.c=%.o)
-TEST_OBJECTS := $(TEST_SOURCES:%.c=%.o)
+TARGET_OBJECTS := $(TARGET_SOURCES:%.cpp=%.o)
+TEST_OBJECTS := $(TEST_SOURCES:%.cpp=%.o)
 
-CFLAGS := -Wall -Wextra -Werror -pedantic -std=c99 -fPIC \
+CFLAGS := -std=c++20 -Wall -Wextra -Werror -pedantic \
           -DGLIB_DISABLE_DEPRECATION_WARNINGS
+SHARED_CFLAGS := -fPIC
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
 else
@@ -37,19 +36,19 @@ LDFLAGS := $(shell pkg-config --libs $(PACKAGES)) \
 
 # Link target
 $(TARGET): $(TARGET_OBJECTS) $(PURPLE)
-	$(CC) $(CFLAGS) $(INCLUDES) $(TARGET_OBJECTS) -o $@ \
+	$(CC) $(CFLAGS) $(SHARED_CFLAGS) $(INCLUDES) $(TARGET_OBJECTS) -o $@ \
 	$(LDFLAGS) -Wl,-rpath=$(shell realpath $(PURPLE_DIR))
 
 # Compile target
 $(TARGET_OBJECTS): $(TARGET_SOURCES)
-	$(CC) $(CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
+	$(CC) $(CFLAGS) $(SHARED_CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
 
 
-testrunner: $(TEST_OBJECTS) $(MUNIT) $(TARGET)
-	$(CC) $(CFLAGS) $(TEST_OBJECTS) $(MUNIT) -o $@ \
+testrunner: $(TEST_OBJECTS) $(TARGET)
+	$(CC) $(CFLAGS) $(TEST_OBJECTS) -o testrunner \
 	-L. -lpesterchum -Wl,-rpath=$(shell pwd)
 
-$(TEST_OBJECTS): $(TEST_SOURCES)
+*.o: *.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
 
 
@@ -60,15 +59,10 @@ $(PURPLE):
 	ln -s libpurple.so libpurple.so.0
 	cd ../..
 
-$(MUNIT):
-	cd $(MUNIT_DIR)
-	make munit.o CC=$(CC) CFLAGS="$(CFLAGS)"
-	cd ../..
-
 
 .PHONY: clean
 clean:
-	rm -f **/*.o **/*.d **/*.so **/*.so.* **/*.a **/*.dll **/*.exe **/*.de
+	rm -f **/*.o **/*.d **/*.so **/*.so.*
 	rm -f $(TARGET) testrunner
 
 -include $(TARGET_OBJECTS:%.o=%.d)

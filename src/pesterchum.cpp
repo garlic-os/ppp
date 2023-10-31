@@ -4,6 +4,7 @@
 #define PURPLE_PLUGINS
 
 #include <string.h>
+#include <stdint.h>
 
 #define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_76)
 #include <glib.h>
@@ -21,20 +22,20 @@
 #include "pesterchum.h"
 
 
-#define P_NAME     "Purple Pesterchum"
-#define P_SUMMARY  "Pesterchum plugin for libpurple/Pidgin"
-#define P_DESC     "Renders Pesterchum effects in Pidgin."
-#define P_ID       "garlic-pesterchum_pidgin_plugin"
-#define P_AUTHOR   "garlicOS® <sisdfk@gmail.com>"
-#define P_VERSION  "0.0.1"
-#define P_WEBSITE  "https://github.com/garlic_os/purple-pesterchum"
+#define P_NAME     (char*) "Purple Pesterchum"
+#define P_SUMMARY  (char*) "Pesterchum plugin for libpurple/Pidgin"
+#define P_DESC     (char*) "Renders Pesterchum effects in Pidgin."
+#define P_ID       (char*) "garlic-pesterchum_pidgin_plugin"
+#define P_AUTHOR   (char*) "garlicOS® <sisdfk@gmail.com>"
+#define P_VERSION  (char*) "0.0.1"
+#define P_WEBSITE  (char*) "https://github.com/garlic_os/purple-pesterchum"
 
 
 // https://stackoverflow.com/a/4832
 static gssize index_of(const char *haystack, const char *needle, gssize start_index) {
 	g_return_val_if_fail(haystack != NULL, -1);
 	g_return_val_if_fail(needle   != NULL, -1);
-	g_return_val_if_fail(start_index < strlen(haystack), -1);
+	g_return_val_if_fail(start_index < (gssize) strlen(haystack), -1);
 
 	const char *source = haystack + start_index;
 	const char *found = strstr(source, needle);
@@ -54,48 +55,33 @@ static gssize index_of(const char *haystack, const char *needle, gssize start_in
 void colorize_message(char **message) {
 	g_return_if_fail(message   != NULL);
 	g_return_if_fail(*message  != NULL);
-	g_return_if_fail(**message != '\0');
+	g_return_if_fail(**message != '\0');  //  Ensure string is null-terminated
 	g_return_if_fail(g_utf8_validate(*message, -1, NULL));
 
 	GString *new_msg = g_string_sized_new(strlen(*message));
 
 	// Scan the message for Pesterchum color codes and add respective
 	// Pidgin color codes to the new message
-	gssize index_close = 0;
-	gssize index_open = 0;
-	gssize index_start = 0;
-	gssize index_end = 0;
-	while (index_open != -1) {
-		index_open = index_of(*message, "<c=", index_close);
-		if (index_open != -1) {
-			index_close = index_of(*message, ">", index_open);
-			if (index_close != -1) {
-				index_start = index_close + 1;
-				index_end = index_of(*message, "</c>", index_start);
-				if (index_end != -1) {
-					g_string_append_len(new_msg, *message + index_start, index_end - index_start);
-					g_string_append(new_msg, "</FONT>");
-					g_string_append_len(new_msg, *message + index_open + 3, index_close - index_open - 3);
-					g_string_append(new_msg, "<FONT COLOR=\"#");
-					g_string_append_len(new_msg, *message + index_open + 3, index_close - index_open - 3);
-					g_string_append(new_msg, "\">");
-					index_close += 4;
-				} else {
-					g_string_append_len(new_msg, *message + index_start, strlen(*message) - index_start);
-					g_string_append(new_msg, "</FONT>");
-					g_string_append_len(new_msg, *message + index_open + 3, index_close - index_open - 3);
-					g_string_append(new_msg, "<FONT COLOR=\"#");
-					g_string_append_len(new_msg, *message + index_open + 3, index_close - index_open - 3);
-					g_string_append(new_msg, "\">");
-					index_close = strlen(*message);
-				}
-			} else {
-				g_string_append_len(new_msg, *message + index_open, strlen(*message) - index_open);
-				index_close = strlen(*message);
-			}
-		} else {
-			g_string_append_len(new_msg, *message + index_close, strlen(*message) - index_close);
-		}
+	gssize message_size = strlen(*message);
+	gssize index_close_end = 0;
+	while (index_close_end < message_size) {
+		gssize index_open_start = index_of(*message, "<c=", index_close_end);
+		if (index_open_start == -1) break;  // No more color tags in the message
+		gssize index_open_end = index_of(*message, ">", index_open_start + 3);
+		if (index_open_start == -1) break;  // Malformed tag; just give up
+		const char * const color_code = *message + index_open_start + 3;
+		size_t code_size = index_open_end - index_open_start;
+		g_string_append(new_msg, "<FONT COLOR=\"");
+		g_string_append_len(new_msg, color_code, code_size);
+		g_string_append(new_msg, "\">");
+	
+		gssize index_close_start = index_of(*message, "</c>", index_open_end + 1);
+		if (index_close_start == -1) index_close_start = message_size;
+		const char * const text_content = *message + 3 + index_open_end + 1;
+		size_t content_size = index_close_start - index_open_end + 4;
+		g_string_append_len(new_msg, text_content, content_size);
+		g_string_append(new_msg, "</FONT>");
+		index_close_end = index_close_start + 4;
 	}
 
 	// Return result
