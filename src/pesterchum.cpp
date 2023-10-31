@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_76)
+#define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_32)
 #include <glib.h>
 
 // libpurple headers
