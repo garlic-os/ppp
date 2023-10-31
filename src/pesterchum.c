@@ -3,21 +3,22 @@
 
 #define PURPLE_PLUGINS
 
-#include <string.h>
-#include <stdint.h>
-#include <ctype.h>
+#include <ctype.h>  // isdigit
+#include <stdint.h>  // size_t
+#include <string.h>  // strlen, strstr
 
 #define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_32)
-#include <glib.h>
+#include <glib.h>  // g_*
 
 // libpurple headers
 #ifdef _WIN32
 	#include <libpurple/win32dep.h>
 #endif
-#include <libpurple/version.h>
-#include <libpurple/plugin.h>
-#include <libpurple/util.h>
-#include <libpurple/debug.h>
+#include <libpurple/account.h>  // PurpleAccount
+#include <libpurple/conversation.h>  // PurpleConversation, PurpleMessageFlags, purple_conversations_get_handle
+#include <libpurple/plugin.h>  // PurplePlugin, PurplePluginInfo, PURPLE_INIT_PLUGIN
+#include <libpurple/signals.h>  // PURPLE_CALLBACK, purple_signal_connect
+#include <libpurple/version.h>  // PURPLE_*_VERSION
 
 #include "pesterchum.h"
 
