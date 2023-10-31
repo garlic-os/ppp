@@ -88,7 +88,7 @@ void convert_message(char **message) {
 	g_string_append(new_msg, cursor);  // Add any text after the last tag
 
 	// Return result
-	// g_free(*message);
+	g_free(*message);
 	*message = g_string_free(new_msg, FALSE);
 }
 
