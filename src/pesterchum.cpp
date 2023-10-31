@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <ctype.h>
 
 #define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_32)
 #include <glib.h>
@@ -30,28 +31,21 @@
 #define P_WEBSITE  (char*) "https://github.com/garlic_os/purple-pesterchum"
 
 
-// https://stackoverflow.com/a/4832
-static gssize index_of(const char *haystack, const char *needle, gssize start_index) {
-	g_return_val_if_fail(haystack != NULL, -1);
-	g_return_val_if_fail(needle   != NULL, -1);
-	g_return_val_if_fail(start_index < (gssize) strlen(haystack), -1);
-
-	const char *source = haystack + start_index;
-	const char *found = strstr(source, needle);
-	if (found == NULL) {
-		return -1;
-	}
-	return found - source;
-}
-
-// Converts message format from Pesterchum to Pidgin
-// Pidgin font format: <FONT COLOR="#ffffff">hi</FONT>
-// Pesterchum font format:
-//   <c=0,255,0>hi</c>
-//   <c=#7f7f7f>hi</c>
-//   <c=red>hi</c>
-//   ending </c> not required
-void colorize_message(char **message) {
+/**
+ * Converts message format from Pesterchum to Pidgin
+ * Pidgin font format: <FONT COLOR="#ffffff">hi</FONT>
+ * Pesterchum font format:
+ *   <c=0,255,0>hi</c>
+ *   <c=#7f7f7f>hi</c>
+ *   <c=red>hi</c>
+ *   ending </c> not required
+ *
+ * @param message  (IN/OUT) The message to convert
+ * @pre   message is a null-terminated UTF-8 string
+ * @pre   message is allocated with malloc()
+ * @post  message should be freed with free()
+ */
+void convert_message(char **message) {
 	g_return_if_fail(message   != NULL);
 	g_return_if_fail(*message  != NULL);
 	g_return_if_fail(**message != '\0');  //  Ensure string is null-terminated
@@ -61,27 +55,37 @@ void colorize_message(char **message) {
 
 	// Scan the message for Pesterchum color codes and add respective
 	// Pidgin color codes to the new message
-	gssize message_size = strlen(*message);
-	gssize index_close_end = 0;
-	while (index_close_end < message_size) {
-		gssize index_open_start = index_of(*message, "<c=", index_close_end);
-		if (index_open_start == -1) break;  // No more color tags in the message
-		gssize index_open_end = index_of(*message, ">", index_open_start + 3);
-		if (index_open_start == -1) break;  // Malformed tag; just give up
-		const char * const color_code = *message + index_open_start + 3;
-		size_t code_size = index_open_end - index_open_start;
+	size_t message_size = strlen(*message);
+	char *cursor = *message;
+	while (cursor < *message + message_size) {
+		char *tag_start = strstr(cursor, "<c=");
+		if (tag_start == NULL) break;  // No more color tags in the message
+		char *color_start = tag_start + 3;
+		char *color_end = strstr(color_start, ">");
+		if (color_end == NULL) break;  // Malformed tag; just give up
+		size_t color_size = color_end - color_start;
+		bool is_rgb = isdigit(color_start[0]);
+		char *preceding_text = cursor;
+		size_t preceding_text_size = tag_start - cursor;
+		g_string_append_len(new_msg, preceding_text, preceding_text_size);
 		g_string_append(new_msg, "<FONT COLOR=\"");
-		g_string_append_len(new_msg, color_code, code_size);
+		if (is_rgb) g_string_append(new_msg, "rgb(");
+		g_string_append_len(new_msg, color_start, color_size);
+		if (is_rgb) g_string_append(new_msg, ")");
 		g_string_append(new_msg, "\">");
 	
-		gssize index_close_start = index_of(*message, "</c>", index_open_end + 1);
-		if (index_close_start == -1) index_close_start = message_size;
-		const char * const text_content = *message + 3 + index_open_end + 1;
-		size_t content_size = index_close_start - index_open_end + 4;
-		g_string_append_len(new_msg, text_content, content_size);
+		char *content_start = color_end + 1;
+		char *content_end = strstr(content_start, "</c>");
+		if (content_end == NULL) {
+			// No closing tag; just use the rest of the message
+			content_end = *message + message_size;
+		}
+		size_t content_size = content_end - content_start;
+		g_string_append_len(new_msg, content_start, content_size);
 		g_string_append(new_msg, "</FONT>");
-		index_close_end = index_close_start + 4;
+		cursor = content_end + 4;
 	}
+	g_string_append(new_msg, cursor);  // Add any text after the last tag
 
 	// Return result
 	// g_free(*message);
