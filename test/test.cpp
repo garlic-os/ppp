@@ -6,7 +6,7 @@
 void do_test(std::string input, std::string expected_output) {
 	char *message = static_cast<char*>(malloc(input.size() + 1));
 	strcpy(message, input.c_str());
-	colorize_message(&message);
+	convert_message(&message);
 	CHECK(expected_output == message);
 	free(message);
 }
