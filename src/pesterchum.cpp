@@ -11,9 +11,6 @@
 #include <glib.h>  // g_*
 
 // libpurple headers
-#ifdef _WIN32
-	#include <libpurple/win32dep.h>
-#endif
 #include <libpurple/account.h>  // PurpleAccount
 #include <libpurple/conversation.h>  // PurpleConversation, PurpleMessageFlags, purple_conversations_get_handle
 #include <libpurple/plugin.h>  // PurplePlugin, PurplePluginInfo, PURPLE_INIT_PLUGIN, PURPLE_PLUGIN_STANDARD, PURPLE_PRIORITY_DEFAULT
