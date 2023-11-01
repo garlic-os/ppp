@@ -23,7 +23,7 @@ TEST_CASE("Color tags", "[color]") {
 	SECTION("Longer text content") {
 		do_test(
 			"<c=#ff00ff>computer</c>",
-			"<FONT COLOR=\"#ff00ff\">computer</FONT"
+			"<FONT COLOR=\"#ff00ff\">computer</FONT>"
 		);
 	}
 
