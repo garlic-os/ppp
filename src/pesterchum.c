@@ -3,6 +3,9 @@
 
 #define PURPLE_PLUGINS
 
+// DEBUG
+#include <stdio.h>
+
 #include <ctype.h>  // isdigit
 #include <stdint.h>  // size_t
 #include <string.h>  // strlen, strstr
@@ -51,6 +54,8 @@ void convert_message(char **message) {
 
 	GString *new_msg = g_string_sized_new(strlen(*message));
 
+	printf("[DEBUG] original: %s\n", *message);
+
 	// Scan the message for Pesterchum color markup and add corresponding
 	// Pidgin color markup to the new message
 	size_t message_size = strlen(*message);
@@ -88,6 +93,7 @@ void convert_message(char **message) {
 	// Return result
 	g_free(*message);
 	*message = g_string_free(new_msg, FALSE);
+	printf("[DEBUG] converted: %s\n", *message);
 }
 
 
