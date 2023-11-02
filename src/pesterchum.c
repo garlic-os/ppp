@@ -3,8 +3,9 @@
 
 #define PURPLE_PLUGINS
 
-// DEBUG
-#include <stdio.h>
+#ifdef DEBUG_LOGGING
+	#include <stdio.h>
+#endif
 
 #include <ctype.h>  // isdigit
 #include <stdint.h>  // size_t
@@ -20,6 +21,17 @@
 #define P_AUTHOR   (char*) "garlicOS® <sisdfk@gmail.com>"
 #define P_VERSION  (char*) "0.0.1"
 #define P_WEBSITE  (char*) "https://github.com/garlic_os/purple-pesterchum"
+
+
+#define LOG_SIGNAL(signal, payload) \
+	#ifdef DEBUG_LOGGING
+		printf("[libpesterchum] received signal: %s\npayload:%s\n", signal, payload);
+	#endif
+
+#define LOG_CONVERSION(payload) \
+	#ifdef DEBUG_LOGGING
+		printf("[libpesterchum] converted: %s\n", payload);
+	#endif
 
 
 /**
@@ -44,7 +56,7 @@ void convert_message(char **message) {
 
 	GString *new_msg = g_string_sized_new(strlen(*message));
 
-	printf("[DEBUG] original:  %s\n", *message);
+	// printf("[DEBUG] original:  %s\n", *message);
 
 	// Scan the message for Pesterchum color markup and add corresponding
 	// Pidgin color markup to the new message
@@ -87,9 +99,9 @@ void convert_message(char **message) {
 	g_string_append(new_msg, cursor);  // Add any text after the last tag
 
 	// Return result
+	LOG_CONVERSION(new_msg);
 	g_free(*message);
 	*message = g_string_free(new_msg, FALSE);
-	printf("[DEBUG] converted: %s\n", *message);
 }
 
 
@@ -105,6 +117,7 @@ static gboolean receiving_im_msg(
 	(void) sender;
 	(void) conv;
 	(void) flags;
+	LOG_SIGNAL("receiving-im-msg", *message);
 	convert_message(message);
 	return FALSE;  // "message should not be canceled"
 }
