@@ -91,32 +91,31 @@ void convert_message(char **message) {
 }
 
 
-// Convert incoming text by intercepting the received-im signal
-static void received_im_msg(
+// Convert incoming text by intercepting the receiving-im signal
+static gboolean receiving_im_msg(
 	PurpleAccount *account,
-	char *sender,
-	char *message,
+	char **sender,
+	char **message,
 	PurpleConversation *conv,
-	PurpleMessageFlags flags
+	PurpleMessageFlags *flags
 ) {
 	(void) account;
 	(void) sender;
 	(void) conv;
 	(void) flags;
-	// if (conv == NULL) {
-	// 	conv = purple_conversation_new(PURPLE_CONV_TYPE_IM, account, sender);
-	// }
-	convert_message(&message);
+	convert_message(message);
+	return FALSE;  // "message should not be canceled"
 }
 
 
-// Register the received-im signal
+// Register the receiving-im signal
 static gboolean plugin_load(PurplePlugin *plugin) {
+	colornames_init();
 	purple_signal_connect(
 		purple_conversations_get_handle(),
-		"received-im-msg",
+		"receiving-im-msg",
 		plugin,
-		PURPLE_CALLBACK(received_im_msg),
+		PURPLE_CALLBACK(receiving_im_msg),
 		NULL
 	);
 	return TRUE;
