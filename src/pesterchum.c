@@ -54,7 +54,7 @@ void convert_message(char **message) {
 
 	GString *new_msg = g_string_sized_new(strlen(*message));
 
-	printf("[DEBUG] original: %s\n", *message);
+	printf("[DEBUG] original:  %s\n", *message);
 
 	// Scan the message for Pesterchum color markup and add corresponding
 	// Pidgin color markup to the new message
@@ -71,10 +71,16 @@ void convert_message(char **message) {
 		char *preceding_text = cursor;
 		size_t preceding_text_size = tag_start - cursor;
 		g_string_append_len(new_msg, preceding_text, preceding_text_size);
+
+		bool is_hex = color_start[0] == '#';
 		g_string_append(new_msg, "<FONT COLOR=\"");
-		if (is_rgb) g_string_append(new_msg, "rgb(");
-		g_string_append_len(new_msg, color_start, color_size);
-		if (is_rgb) g_string_append(new_msg, ")");
+		if (is_hex) {
+			g_string_append_len(new_msg, color_start, color_size);
+		} else {
+			g_string_append(new_msg, "rgb(");
+			g_string_append_len(new_msg, color_start, color_size);
+			g_string_append(new_msg, ")");
+		}
 		g_string_append(new_msg, "\">");
 	
 		char *content_start = color_end + 4;
@@ -149,6 +155,7 @@ static PurplePluginInfo info = {
 	.major_version     = PURPLE_MAJOR_VERSION,
 	.minor_version     = PURPLE_MINOR_VERSION,
 	.type              = PURPLE_PLUGIN_STANDARD,
+	// .type              = PURPLE_PLUGIN_PROTOCOL,
 	.ui_requirement    = NULL,
 	.flags             = 0,
 	.dependencies      = NULL,
