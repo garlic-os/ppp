@@ -173,4 +173,10 @@ static void init_plugin(PurplePlugin *plugin) {
 }
 
 
-PURPLE_INIT_PLUGIN(purple_pesterchum, init_plugin, info);
+#ifdef __cplusplus
+	extern "C" {
+#endif
+	PURPLE_INIT_PLUGIN(purple_pesterchum, init_plugin, info);
+#ifdef __cplusplus
+	}
+#endif
