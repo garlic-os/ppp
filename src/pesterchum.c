@@ -9,17 +9,7 @@
 #include <ctype.h>  // isdigit
 #include <stdint.h>  // size_t
 #include <string.h>  // strlen, strstr
-
-#define GLIB_VERSION_MIN_REQUIRED (GLIB_VERSION_2_32)
-#include <glib.h>  // g_*
-
-// libpurple headers
-#include <libpurple/account.h>  // PurpleAccount
-#include <libpurple/conversation.h>  // PurpleConversation, PurpleMessageFlags, purple_conversations_get_handle
-#include <libpurple/plugin.h>  // PurplePlugin, PurplePluginInfo, PURPLE_INIT_PLUGIN, PURPLE_PLUGIN_STANDARD, PURPLE_PRIORITY_DEFAULT
-#include <libpurple/signals.h>  // PURPLE_CALLBACK, purple_signal_connect
-#include <libpurple/version.h>  // PURPLE_*_VERSION
-
+#include <purple.h>  // g_*, G*, purple_*, Purple*, PURPLE_*
 #include "./pesterchum.h"
 
 
