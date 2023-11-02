@@ -122,7 +122,6 @@ static gboolean receiving_im_msg(
 
 // Register the receiving-im signal
 static gboolean plugin_load(PurplePlugin *plugin) {
-	colornames_init();
 	purple_signal_connect(
 		purple_conversations_get_handle(),
 		"receiving-im-msg",
