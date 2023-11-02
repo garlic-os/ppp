@@ -4,11 +4,11 @@
 
 
 void do_test(std::string input, std::string expected_output) {
-	char *message = static_cast<char*>(malloc(input.size() + 1));
-	strcpy(message, input.c_str());
-	convert_message(&message);
-	CHECK(expected_output == message);
-	free(message);
+	INFO("Input: " << input);
+	char *actual_output = strdup(input.c_str());
+	convert_message(&actual_output);
+	CHECK(expected_output == actual_output);
+	free(actual_output);
 }
 
 
