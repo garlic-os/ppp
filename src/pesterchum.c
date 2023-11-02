@@ -21,6 +21,7 @@
 #include <libpurple/version.h>  // PURPLE_*_VERSION
 
 #include "./pesterchum.h"
+#include "./colornames.h"
 
 
 #define P_NAME     (char*) "Purple Pesterchum"
@@ -30,6 +31,13 @@
 #define P_AUTHOR   (char*) "garlicOS® <sisdfk@gmail.com>"
 #define P_VERSION  (char*) "0.0.1"
 #define P_WEBSITE  (char*) "https://github.com/garlic_os/purple-pesterchum"
+
+
+enum ColorType {
+	CT_RGB,
+	CT_HEX,
+	CT_NAME
+};
 
 
 /**
@@ -67,14 +75,29 @@ void convert_message(char **message) {
 		char *color_end = strstr(color_start, "&gt;");
 		if (color_end == NULL) break;  // Malformed tag; just give up
 		size_t color_size = color_end - color_start;
-		bool is_rgb = isdigit(color_start[0]);
+
 		char *preceding_text = cursor;
 		size_t preceding_text_size = tag_start - cursor;
 		g_string_append_len(new_msg, preceding_text, preceding_text_size);
+
+		ColorType color_type;
+		if (color_start[0] == '#') {
+			color_type = CT_HEX;
+		} else if (isdigit(color_start[0])) {
+			color_type = CT_RGB;
+		} else {
+			color_type = CT_NAME;
+		}
 		g_string_append(new_msg, "<FONT COLOR=\"");
-		if (is_rgb) g_string_append(new_msg, "rgb(");
-		g_string_append_len(new_msg, color_start, color_size);
-		if (is_rgb) g_string_append(new_msg, ")");
+		if (color_type == CT_HEX) {
+			g_string_append_len(new_msg, color_start, color_size);
+		} else if (color_type == CT_RGB) {
+			g_string_append(new_msg, "rgb(");
+			g_string_append_len(new_msg, color_start, color_size);
+			g_string_append(new_msg, ")");
+		} else {  // CT_NAME
+			g_string_append(new_msg, colornames_get(color_start, color_size));
+		}
 		g_string_append(new_msg, "\">");
 	
 		char *content_start = color_end + 4;
@@ -130,6 +153,7 @@ static gboolean plugin_load(PurplePlugin *plugin) {
 
 static gboolean plugin_unload(PurplePlugin *plugin) {
 	(void) plugin;
+	colornames_destroy();
 	return TRUE;
 }
 
