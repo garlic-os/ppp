@@ -26,7 +26,7 @@
 #define P_NAME     (char*) "Purple Pesterchum"
 #define P_SUMMARY  (char*) "Pesterchum plugin for libpurple/Pidgin"
 #define P_DESC     (char*) "Renders Pesterchum effects in Pidgin."
-#define P_ID       (char*) "garlic-purple_pesterchum"
+#define P_ID       (char*) "prpl-garlic_os-pesterchum"
 #define P_AUTHOR   (char*) "garlicOS® <sisdfk@gmail.com>"
 #define P_VERSION  (char*) "0.0.1"
 #define P_WEBSITE  (char*) "https://github.com/garlic_os/purple-pesterchum"
