@@ -15,49 +15,49 @@ void do_test(std::string input, std::string expected_output) {
 TEST_CASE("Color tags", "[color]") {
 	SECTION("Basic / hex code") {
 		do_test(
-			"<c=#ff00ff>hi</c>",
+			"&lt;c=#ff00ff&gt;hi&lt;/c&gt;",
 			"<FONT COLOR=\"#ff00ff\">hi</FONT>"
 		);
 	}
 
 	SECTION("Longer text content") {
 		do_test(
-			"<c=#ff00ff>computer</c>",
+			"&lt;c=#ff00ff&gt;computer&lt;/c&gt;",
 			"<FONT COLOR=\"#ff00ff\">computer</FONT>"
 		);
 	}
 
 	SECTION("Text before tag") {
 		do_test(
-			"guh<c=#ff00ff>hi</c>",
+			"guh&lt;c=#ff00ff&gt;hi&lt;/c&gt;",
 			"guh<FONT COLOR=\"#ff00ff\">hi</FONT>"
 		);
 	}
 
 	SECTION("Text after tag") {
 		do_test(
-			"<c=#ff00ff>hi</c>guh",
+			"&lt;c=#ff00ff&gt;hi&lt;/c&gt;guh",
 			"<FONT COLOR=\"#ff00ff\">hi</FONT>guh"
 		);
 	}
 
 	SECTION("Multiple tags") {
 		do_test(
-			"<c=#ff00ff>hi</c><c=#00ff00>bye</c>",
+			"&lt;c=#ff00ff&gt;hi&lt;/c&gt;&lt;c=#00ff00&gt;bye&lt;/c&gt;",
 			"<FONT COLOR=\"#ff00ff\">hi</FONT><FONT COLOR=\"#00ff00\">bye</FONT>"
 		);
 	}
 
 	SECTION("RGB") {
 		do_test(
-			"<c=0,255,0>hi</c>",
+			"&lt;c=0,255,0&gt;hi&lt;/c&gt;",
 			"<FONT COLOR=\"rgb(0,255,0)\">hi</FONT>"
 		);
 	}
 
 	SECTION("Color name") {
 		do_test(
-			"<c=red>hi</c>",
+			"&lt;c=red&gt;hi&lt;/c&gt;",
 			"<FONT COLOR=\"red\">hi</FONT>"
 		);
 	}

@@ -56,10 +56,10 @@ void convert_message(char **message) {
 	size_t message_size = strlen(*message);
 	char *cursor = *message;
 	while (cursor < *message + message_size) {
-		char *tag_start = strstr(cursor, "<c=");
+		char *tag_start = strstr(cursor, "&lt;c=");
 		if (tag_start == NULL) break;  // No more color tags in the message
-		char *color_start = tag_start + 3;
-		char *color_end = strstr(color_start, ">");
+		char *color_start = tag_start + 6;
+		char *color_end = strstr(color_start, "&gt;");
 		if (color_end == NULL) break;  // Malformed tag; just give up
 		size_t color_size = color_end - color_start;
 		bool is_rgb = isdigit(color_start[0]);
@@ -72,8 +72,8 @@ void convert_message(char **message) {
 		if (is_rgb) g_string_append(new_msg, ")");
 		g_string_append(new_msg, "\">");
 	
-		char *content_start = color_end + 1;
-		char *content_end = strstr(content_start, "</c>");
+		char *content_start = color_end + 4;
+		char *content_end = strstr(content_start, "&lt;/c&gt;");
 		if (content_end == NULL) {
 			// No closing tag; just use the rest of the message
 			content_end = *message + message_size;
@@ -81,7 +81,7 @@ void convert_message(char **message) {
 		size_t content_size = content_end - content_start;
 		g_string_append_len(new_msg, content_start, content_size);
 		g_string_append(new_msg, "</FONT>");
-		cursor = content_end + 4;
+		cursor = content_end + 10;
 	}
 	g_string_append(new_msg, cursor);  // Add any text after the last tag
 
