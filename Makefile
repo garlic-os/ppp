@@ -47,8 +47,11 @@ testrunner: $(TEST_OBJECTS) $(TARGET)
 *.o: *.cpp
 	$(CC) $(CFLAGS) -MMD -o $@ -c $<
 
+install: $(TARGET)
+	cp $(TARGET) ~/.purple/plugins/
 
-.PHONY: clean
+
+.PHONY: clean install
 clean:
 	rm -f **/*.o **/*.d **/*.so **/*.so.*
 	rm -f $(TARGET) testrunner
