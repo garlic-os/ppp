@@ -20,7 +20,8 @@ ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
 else
 	ifdef ASAN
-		CFLAGS += -ggdb3 -O0 -fsanitize=address
+		CFLAGS += -ggdb3 -O0
+		LDFLAGS += -fsanitize=address -static-libasan
 	else
 		CFLAGS += -O3
 	endif
