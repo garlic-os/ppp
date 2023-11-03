@@ -1,6 +1,8 @@
 # Purple-Pesterchum
 A libpurple/Pidgin plugin for rendering Pesterchum messages
 
+Track project progress: https://github.com/users/garlic-os/projects/7
+
 ## Requirements
 - libpurple[^1]
 - [make](https://command-not-found.com/make)
