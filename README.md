@@ -17,7 +17,7 @@ $ make
 ## Testing
 ```bash
 $ make testrunner
-./testrunner
+$ ./testrunner
 ```
 
 ## Installing
