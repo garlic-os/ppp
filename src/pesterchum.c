@@ -3,10 +3,6 @@
 
 #define PURPLE_PLUGINS
 
-#ifdef DEBUG_LOGGING
-	#include <stdio.h>
-#endif
-
 #include <ctype.h>  // isdigit
 #include <stdint.h>  // size_t
 #include <string.h>  // strlen, strstr
@@ -25,12 +21,15 @@
 
 #define LOG_SIGNAL(signal, payload) \
 	#ifdef DEBUG_LOGGING
-		printf("[libpesterchum] received signal: %s\npayload:%s\n", signal, payload);
+		purple_debug_info( \
+			"[libpesterchum] received signal: %s\npayload:%s\n", \
+			signal, payload \
+		);
 	#endif
 
 #define LOG_CONVERSION(payload) \
 	#ifdef DEBUG_LOGGING
-		printf("[libpesterchum] converted: %s\n", payload);
+		purple_debug_info("[libpesterchum] converted: %s\n", payload);
 	#endif
 
 
