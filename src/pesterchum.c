@@ -68,7 +68,6 @@ void convert_message(char **message) {
 		char *color_end = strstr(color_start, "&gt;");
 		if (color_end == NULL) break;  // Malformed tag; just give up
 		size_t color_size = color_end - color_start;
-		bool is_rgb = isdigit(color_start[0]);
 		char *preceding_text = cursor;
 		size_t preceding_text_size = tag_start - cursor;
 		g_string_append_len(new_msg, preceding_text, preceding_text_size);
