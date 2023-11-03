@@ -28,4 +28,4 @@ $ make install
 
 ## Credits
 - code lifted heavily from [Gaim Colorize Plug-in](https://keep.imfreedom.org/pidgin/purple-plugin-pack/file/tip/colorize/colorize.c) © 2005 Ike Gingerich
-- this was [virtueisdead](https://cohost.org/virtueisdead)'s idea
+- this was [virtueisdead](https://cohost.org/virtueisdead)'s idea blame them
