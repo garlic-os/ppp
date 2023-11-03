@@ -21,10 +21,9 @@ $ ./testrunner
 ```
 
 ## Installing
-TO DO
-<!-- ```bash
+```bash
 $ make install
-``` -->
+```
 
 ## Credits
 - code lifted heavily from [Gaim Colorize Plug-in](https://keep.imfreedom.org/pidgin/purple-plugin-pack/file/tip/colorize/colorize.c) © 2005 Ike Gingerich
