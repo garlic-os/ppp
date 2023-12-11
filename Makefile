@@ -15,7 +15,7 @@ TEST_OBJECTS = $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(TEST_SOURCES)))
 
 CFLAGS := -std=c++20 -Wall -Wextra -Werror -pedantic -MMD \
           -DGLIB_DISABLE_DEPRECATION_WARNINGS \
-		  $(shell pkg-config --cflags $(PACKAGES))
+          $(shell pkg-config --cflags $(PACKAGES) | sed 's/-I/-isystem /g')
 SHARED_CFLAGS := -fPIC
 ifdef DEBUG
 	CFLAGS += -ggdb3 -O0
