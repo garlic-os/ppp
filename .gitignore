@@ -1,3 +1,7 @@
+# clang
+.cache/
+compile_commands.json
+
 # Build artifacts
 libpesterchum.so
 testrunner
